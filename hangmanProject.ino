@@ -44,7 +44,7 @@ void tftTest() {
   // write the text to the top left corner of the screen
   TFTscreen.text("Can\nyou\nsurvive\nthe\nzombies\n!?", 0, 0);
 
-  delay(5000);
+  //delay(5000);
 }
 
 
@@ -84,10 +84,12 @@ void jeopardyTone() {
 LiquidCrystal lcd(7, 6, 0, 1, 2, 3);
 
 const String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const char list[10][16] = {"RESPONSIBLE", "SHORT", "LOVING", "COHERENT", "OVERCONFIDENT",
-                           "GUN", "PRICKLY", "DAILY", "CONCERNED", "SOCIETY"
+const String list[10] = {"RESPECTXXX", "SHORTXXXXX", "LOVINGXXXX", "COHERENTXX", "CONFIDENTX",
+                           "GUNXXXXXXX", "PRICKLYXXX", "DAILYXXXXX", "CONCERNEDX", "SOCIETYXXX"
                           };
-const char* selectWord;
+String selectWord;
+
+char reveal[16];
 
 
 void printToLCD() {
@@ -99,11 +101,25 @@ void printToLCD() {
   //get the random word using r
   selectWord = list[r];
 
-  //get length of selectword
-  int l = strlen(selectWord);
+  char temp[16];
+  
+  int cpy;
+  
+  String letterOrWord = "Letter or Word";
+  
+  
+  for(cpy = 0; cpy < 16; cpy++){
 
-  //start the dashes string
-  char init[16];
+   temp[cpy] = selectWord[cpy];
+    
+  }
+  
+  
+  //get length of selectword
+  int l = strlen(temp);
+
+//  start the dashes string
+  
   char dash = '_';
 
 
@@ -111,11 +127,11 @@ void printToLCD() {
   int idx;
   for (idx = 0; idx < l; idx++) {
 
-    init[idx] = dash;
+    reveal[idx] = dash;
 
   }
 
-  init[l] = '\0';
+  reveal[l] = '\0';
 
 
   // set up the LCD's number of columns and rows:
@@ -123,7 +139,7 @@ void printToLCD() {
   //set to first line
   lcd.setCursor(0, 0);
   //Print a message to the LCD.
-  lcd.print(init);
+  lcd.print(letterOrWord);
   //set to second line
   lcd.setCursor(0, 1);
   // Print a message to the LCD second line.
@@ -158,7 +174,7 @@ void shiftCursor() {
   int idx3 = 0;
 
 
-  //if right button is pressed
+  //if left button is pressed
   if (digitalRead(A4) == 0)
   {
     alphaIdx = alphaIdx - 1;
@@ -274,8 +290,7 @@ void getSelect() {
 
 int start = 0;
 
-void displayGame() {
-
+void displayProgress() {
 
 
   if (start == 0) {
@@ -284,20 +299,21 @@ void displayGame() {
     // clear the screen with a black background
     TFTscreen.background(0, 0, 0);
 
-    TFTscreen.setTextSize(6);
+    TFTscreen.setTextSize(3);
     // write the text to the top left corner of the screen
-    TFTscreen.text(" o\n/|\\\n/ \\", 0, 0);
+    TFTscreen.text("\n   o\n  /|\\\n  / \\", 0, 0);
+
+    TFTscreen.setTextSize(2);
+    TFTscreen.text( reveal, 4, 110);
+    
     TFTscreen.setTextSize(1);
-    TFTscreen.text("6 chances left", 0, 150);
+    TFTscreen.text("6 chances left", 20, 150);
     start = 1;
   }
 
 
 
-
-
 }
-
 
 void setup() {
 
@@ -308,12 +324,13 @@ void setup() {
 
 }
 
+
 void loop() {
 
 
   lcd.blink();//blinks the cursor
   delay(50);
-  displayGame();
+  displayProgress();
   delay(50);
   shiftCursor();//shifts the alphabet array within row 1 as the cursor reaches either ends of the screen
   delay(50);
@@ -321,4 +338,3 @@ void loop() {
   delay(50);
 
 }
-
